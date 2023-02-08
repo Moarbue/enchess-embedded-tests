@@ -5,8 +5,8 @@
 #include "driver/gpio.h"
 #include <sys/time.h>
 
-#define pin_mode gpio_set_direction
-#define digital_write gpio_set_level
+#define pin_mode(pin, direction) ESP_ERROR_CHECK(gpio_set_direction(pin, direction))
+#define digital_write(pin, value) ESP_ERROR_CHECK(gpio_set_level(pin, value))
 
 static inline int64_t millis()
 {

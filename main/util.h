@@ -3,16 +3,14 @@
 
 #include <inttypes.h>
 #include "driver/gpio.h"
-#include <sys/time.h>
+#include "esp_timer.h"
 
 #define pin_mode gpio_set_direction
 #define digital_write gpio_set_level
 
 static inline int64_t millis()
 {
-    struct timeval tv_now;
-    gettimeofday(&tv_now, NULL);
-    return (int64_t)tv_now.tv_sec * 1000000L + (int64_t)tv_now.tv_usec;
+    return (unsigned long) (esp_timer_get_time() / 1000ULL);
 }
 
 #endif // ENCHESS_UTIL_H

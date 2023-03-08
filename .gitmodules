@@ -1,0 +1,6 @@
+[submodule "components/arduino"]
+	path = components/arduino
+	url = https://github.com/espressif/arduino-esp32.git
+[submodule "components/TMC2209"]
+	path = components/TMC2209
+	url = https://github.com/janelia-arduino/TMC2209.git

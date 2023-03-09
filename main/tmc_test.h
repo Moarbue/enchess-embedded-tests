@@ -2,6 +2,7 @@
 #define ENCHESS_TMC_TEST_H
 
 #include "enchess_pinout.h"
+#include "util.h"
 
 #define is_bit_set(value, bit) (((value) & (1 << bit)) >> bit)
 
@@ -12,6 +13,7 @@ static uint8_t tmc_index = 0;
 
 static inline void tmc_test_setup(void)
 {
+    LOG_MSG("Setting up sensors...");
     pinMode(ENCHESS_PIN_TMC_0, OUTPUT);
     pinMode(ENCHESS_PIN_TMC_1, OUTPUT);
     pinMode(ENCHESS_PIN_TMC_2, OUTPUT);

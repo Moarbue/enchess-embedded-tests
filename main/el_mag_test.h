@@ -2,6 +2,7 @@
 #define ENCHESS_EL_MAG_TEST_H
 
 #include "enchess_pinout.h" 
+#include "util.h"
 
 #define EL_MAG_BLINK_INTERVAL 2000
 static unsigned long el_mag_last_blinked;
@@ -9,6 +10,7 @@ static uint8_t el_mag_state = 0;
 
 static inline void el_mag_test_setup(void)
 {
+    LOG_MSG("Setting up electromagnet...");
     pinMode(ENCHESS_PIN_EL_MAG, OUTPUT);
     el_mag_last_blinked = millis();
 }

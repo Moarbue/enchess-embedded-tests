@@ -2,6 +2,7 @@
 #define ENCHESS_LED_TEST_H
 
 #include "enchess_pinout.h" 
+#include "util.h"
 
 #define LED1_BLINK_INTERVAL 1000
 #define LED2_BLINK_INTERVAL 800
@@ -15,6 +16,7 @@ static uint8_t led3_state = 0;
 
 static inline void led_test_setup(void)
 {
+    LOG_MSG("Setting up LED's...");
     pinMode(ENCHESS_PIN_LED1, OUTPUT);
     pinMode(ENCHESS_PIN_LED2, OUTPUT);
     pinMode(ENCHESS_PIN_LED3, OUTPUT);

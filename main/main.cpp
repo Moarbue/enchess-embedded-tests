@@ -21,4 +21,5 @@ void loop()
     el_mag_test_run();
     tmc_test_run();
     tmc2209_test_run();
+    delay(10);
 }

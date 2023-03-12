@@ -7,10 +7,14 @@
 
 #define TMC2209_BAUDRATE             115200
 #define TMC2209_DRIVER_ADDRESS1      0b00 
-#define TMC2209_R_SENSE              0.11f // Match to your driver
+#define TMC2209_R_SENSE              0.11f
+#define TMC2209_MAX_STEPS            5000
 
 HardwareSerial stepper_serial(1);
 TMC2209Stepper s1(&stepper_serial, TMC2209_R_SENSE, TMC2209_DRIVER_ADDRESS1);
+
+bool shaft = false;
+uint16_t step = 0;
 
 static inline void tmc2209_test_setup(void)
 {
@@ -46,18 +50,18 @@ static inline void tmc2209_test_setup(void)
     s1.pwm_autoscale(true);
 }
 
-bool shaft = false;
-
 static inline void tmc2209_test_run(void)
 {
-    for (uint16_t i = 5000; i > 0; i--) {
+    if (step++ < TMC2209_MAX_STEPS) {
         digitalWrite(ENCHESS_PIN_S1_STEP, HIGH);
         delayMicroseconds(160);
         digitalWrite(ENCHESS_PIN_S1_STEP, LOW);
         delayMicroseconds(160);
+    } else {
+        shaft = !shaft;
+        s1.shaft(shaft);
+        step = 0;
     }
-    shaft = !shaft;
-    s1.shaft(shaft);
 }
 
 #endif // ENCHESS_TMC2209_TEST_H

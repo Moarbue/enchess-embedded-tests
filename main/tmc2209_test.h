@@ -2,37 +2,32 @@
 #define ENCHESS_TMC2209_TEST_H
 
 #include "enchess_pinout.h"
-#include "TMC2209.h"
+#include "TMCStepper.h"
 #include "util.h"
 
 #define TMC2209_BAUDRATE             115200
-#define TMC2209_RUN_CURRENT          50
-#define TMC2209_HOLD_CURRENT         10
-#define TMC2209_HOLD_DELAY           0
-#define TMC2209_VELOCITY             20000
-#define TMC2209_STALLGUARD_THRESHOLD 50
-
-TMC2209 s1;
-TMC2209 s2;
+#define TMC2209_DRIVER_ADDRESS1      0b00 
+#define TMC2209_R_SENSE              0.11f // Match to your driver
 
 HardwareSerial stepper_serial(1);
+TMC2209Stepper s1(&stepper_serial, TMC2209_R_SENSE, TMC2209_DRIVER_ADDRESS1);
 
-static inline void tmc2209_test_setup()
+static inline void tmc2209_test_setup(void)
 {
     LOG_MSG("Setting up Stepper Driver's...");
-    pinMode(ENCHESS_PIN_S1_EN,   GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S1_MS1,  GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S1_MS2,  GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S1_DIR,  GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S1_STEP, GPIO_MODE_OUTPUT);
+    pinMode(ENCHESS_PIN_S1_EN,   OUTPUT);
+    pinMode(ENCHESS_PIN_S1_MS1,  OUTPUT);
+    pinMode(ENCHESS_PIN_S1_MS2,  OUTPUT);
+    pinMode(ENCHESS_PIN_S1_DIR,  OUTPUT);
+    pinMode(ENCHESS_PIN_S1_STEP, OUTPUT);
 
-    pinMode(ENCHESS_PIN_S2_EN,   GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S2_MS1,  GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S2_MS2,  GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S2_DIR,  GPIO_MODE_OUTPUT);
-    pinMode(ENCHESS_PIN_S2_STEP, GPIO_MODE_OUTPUT);
+    pinMode(ENCHESS_PIN_S2_EN,   OUTPUT);
+    pinMode(ENCHESS_PIN_S2_MS1,  OUTPUT);
+    pinMode(ENCHESS_PIN_S2_MS2,  OUTPUT);
+    pinMode(ENCHESS_PIN_S2_DIR,  OUTPUT);
+    pinMode(ENCHESS_PIN_S2_STEP, OUTPUT);
     
-    pinMode(ENCHESS_PIN_S_CLK,   GPIO_MODE_OUTPUT);
+    pinMode(ENCHESS_PIN_S_CLK,   OUTPUT);
     
     digitalWrite(ENCHESS_PIN_S1_EN,  LOW);
     digitalWrite(ENCHESS_PIN_S1_MS1, LOW);
@@ -44,23 +39,25 @@ static inline void tmc2209_test_setup()
 
     stepper_serial.begin(115200, SERIAL_8N1, ENCHESS_PIN_S_RX, ENCHESS_PIN_S_TX);
 
-    s1.setup(stepper_serial, 115200, TMC2209::SERIAL_ADDRESS_0);
-    if (!s1.isSetupAndCommunicating()) {
-        return;
-    }
-    s1.setRunCurrent(TMC2209_RUN_CURRENT);
-    s1.setHoldCurrent(TMC2209_HOLD_CURRENT);
-    s1.setHoldDelay(TMC2209_HOLD_DELAY);
-    s1.enableAutomaticGradientAdaptation();
-    s1.setStallGuardThreshold(TMC2209_STALLGUARD_THRESHOLD);
-    s1.enableCoolStep();
-    s1.enable();
-
-    s1.moveAtVelocity(TMC2209_VELOCITY);
+    s1.begin();
+    s1.toff(5);
+    s1.rms_current(600);
+    s1.microsteps(16);
+    s1.pwm_autoscale(true);
 }
 
-static inline void tmc2209_test_run()
+bool shaft = false;
+
+static inline void tmc2209_test_run(void)
 {
+    for (uint16_t i = 5000; i > 0; i--) {
+        digitalWrite(ENCHESS_PIN_S1_STEP, HIGH);
+        delayMicroseconds(160);
+        digitalWrite(ENCHESS_PIN_S1_STEP, LOW);
+        delayMicroseconds(160);
+    }
+    shaft = !shaft;
+    s1.shaft(shaft);
 }
 
 #endif // ENCHESS_TMC2209_TEST_H

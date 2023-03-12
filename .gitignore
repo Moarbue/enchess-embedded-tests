@@ -2,4 +2,3 @@ build/
 sdkconfig
 sdkconfig.old
 .vscode/
-components/TMC2209/CMakeLists.txt

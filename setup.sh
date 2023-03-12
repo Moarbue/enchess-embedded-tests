@@ -2,4 +2,10 @@
 
 set -xe
 
-echo -e "cmake_minimum_required(VERSION 3.5)\nidf_component_register(SRCS \"src/TMC2209.cpp\"\n                    INCLUDE_DIRS \"src/.\"\n                    REQUIRES \"arduino\"\n                    )\n\nproject(TMC2209)" > components/TMC2209/CMakeLists.txt
+echo 'cmake_minimum_required(VERSION 3.5)
+file(GLOB SRC "src/source/*.cpp")
+idf_component_register(SRCS ${SRC}
+                       INCLUDE_DIRS "src/."
+                       REQUIRES "arduino"
+)
+project(TMCStepper)' > components/TMCStepper/CMakeLists.txt

@@ -5,6 +5,7 @@
 #include "tmc2209.h"
 #include "util.h"
 
+#define TMC2209_STALLGUARD_THRS      100
 #define TMC2209_PRINT_INTERVALL      100
 
 unsigned long tmc2209_last_printed;
@@ -22,6 +23,9 @@ static inline void tmc2209_test_setup(void)
     while(!tmc2209_check_connection(&s_x) && !tmc2209_check_connection(&s_y)) {
         LOG_MSG("Failed setting up UART communication with drivers!");
     }
+    
+    tmc2209_stallguard_thrs(&s_x, TMC2209_STALLGUARD_THRS);
+    tmc2209_stallguard_thrs(&s_y, TMC2209_STALLGUARD_THRS);
 }
 
 static inline void tmc2209_test_run(void)

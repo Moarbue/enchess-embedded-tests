@@ -20,9 +20,9 @@ static inline void tmc2209_test_setup(void)
     tmc2209_full(&s_y, ENCHESS_PIN_S2_EN, ENCHESS_PIN_S2_DIR, ENCHESS_PIN_S2_STEP,
                        ENCHESS_PIN_S_RX,  ENCHESS_PIN_S_TX,   ENCHESS_PIN_S2_MS2, ENCHESS_PIN_S2_MS2, TMC2209_ADDRESS_1);
 
-    while(!tmc2209_check_connection(&s_x) && !tmc2209_check_connection(&s_y)) {
-        LOG_MSG("Failed setting up UART communication with drivers!");
-    }
+    // while(!tmc2209_check_connection(&s_x) && !tmc2209_check_connection(&s_y)) {
+    //     LOG_MSG("Failed setting up UART communication with drivers!");
+    // }
     
     tmc2209_stallguard_thrs(&s_x, TMC2209_STALLGUARD_THRS);
     tmc2209_stallguard_thrs(&s_y, TMC2209_STALLGUARD_THRS);
@@ -41,6 +41,7 @@ static inline void tmc2209_test_run(void)
     if (mills - tmc2209_last_printed > TMC2209_PRINT_INTERVALL) {
         tmc2209_last_printed = mills;
 
+        LOG_MSG("%u  %u\r\n", tmc2209_stallguard_result(&s_x), TMC2209_STALLGUARD_THRS);
         if (tmc2209_is_stalling(&s_x)) {
             tmc2209_step_reset(&s_x);
             LOG_MSG("X is stalling!");

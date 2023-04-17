@@ -54,8 +54,8 @@ static inline void tmc2209_test_setup(void)
     tmc2209_sedn(&s_y, 0b01);
     tmc2209_stallguard_thrs(&s_y, TMC2209_STALLGUARD_THRS);
 
-    tmc2209_set_step_delay(&s_x, 5);
-    tmc2209_set_step_delay(&s_y, 5);
+    tmc2209_set_rpm(&s_x, 60);
+    tmc2209_set_rpm(&s_y, 60);
 }
 
 bool dir = false;
